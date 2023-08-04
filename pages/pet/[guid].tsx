@@ -114,7 +114,7 @@ const responsePage = () => {
     // Fetch data based on the 'guid' parameter on the client side
     async function fetchPetData() {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/pet/${guid}/details`); // Replace with your API endpoint
+        const res = await fetch(`http://127.0.0.1:8000/api/v1/pet/${guid}/details`); // Replace with your API endpoint
         const data = await res.json();
         setPetData(data);
       } catch (error) {
