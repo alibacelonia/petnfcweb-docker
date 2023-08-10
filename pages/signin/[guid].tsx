@@ -1,6 +1,14 @@
-import React, { useState, useEffect} from 'react';
+import React, { Fragment, useState, useEffect} from 'react';
 import { useRouter } from 'next/router';
 import PetTypeSelect from "../../components/PetType";
+import StateSelect from "../../components/State";
+import { Dialog, Transition } from '@headlessui/react'
+
+import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import Image from 'next/image';
+
+import bg from '../../public/bg/2.png'
+import CitySelect from '../../components/City';
 
 const isValidUUID = (uuid) => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -9,15 +17,23 @@ const isValidUUID = (uuid) => {
 
 
 export default function Example() {
+  
   const router = useRouter();
   const { guid } = router.query;
+
+  // get the current year
   const currentYear = new Date().getFullYear();
+
   // set formdata
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
     email: '',
     address: '',
+    state: '',
+    state_code: '',
+    city: '',
+    city_id: '',
     postalCode: '',
     phoneNo: '',
     contactPerson: '',
@@ -36,9 +52,48 @@ export default function Example() {
     password: '',
     confirmPassword: ''
   });
+  const closeAlertModal = () => {
+    setAlertModalOpen(false);
+  }
 
+  const openAlertModal = () => {
+    setAlertModalOpen(true)
+  }
+  const [previewURL, setPreviewURL] = useState(null);
+  const [file, setFile] = useState(null);
+  
   const [passwordError, setPasswordError] = useState('');
+  const [petProfileError, setPetProfileError] = useState('');
   const [isEnabledSubmit, setSubmitButtonState] = useState(true);
+
+
+  // Add a state to control the modal visibility
+  const [isOpenImagePreview, setIsModalOpen] = useState(false);
+  const [isOpenModalAlert, setAlertModalOpen] = useState(false);
+
+  // Event handler to open the modal when the image is clicked
+  const handleImageClick = () => {
+    setIsModalOpen(true);
+  };
+
+  // Event handler to close the modal
+  const closePreviewModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCityChange = (value) => {
+    if (value){
+      setFormData((prevData) => ({ ...prevData, ["city_id"]: value.id , "city": value.name}));
+    }
+    else{
+      setFormData((prevData) => ({ ...prevData, ["city_id"]: "", "city": "" }));
+    }
+  };
+
+  const handleStateChange = (value) => {
+    setFormData((prevData) => ({ ...prevData, ["state_code"]: value.state_code, ["state"]: value.name}));
+    handleCityChange("");
+  };
 
 
   const handleChange = (e) => {
@@ -46,6 +101,22 @@ export default function Example() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     if (name === 'confirmPassword') {
       setPasswordError('');
+    }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewURL(reader.result);
+    };
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+      setPetProfileError('');
+    } else {
+      setPreviewURL(null);
+      setPetProfileError('No image selected')
     }
   };
 
@@ -60,37 +131,23 @@ export default function Example() {
       return;
     }
 
-    try {
-      const requestBody = {
-        guid: guid,
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        email: formData.email,
-        address: formData.address,
-        postalCode: formData.postalCode,
-        phoneNo: formData.phoneNo,
-        contactPerson: formData.contactPerson,
-        contactPersonNo: formData.contactPersonNo,
-    
-        petType: formData.petType,
-        petGender: formData.petGender,
-        petName: formData.petName,
-        petMicrochipNo: formData.petMicrochipNo,
-        petBreed:formData.petBreed,
-        petColor: formData.petColor,
-        petBirthMonth: formData.petBirthMonth,
-        petBirthYear: formData.petBirthYear,
-    
-        username: formData.username,
-        password: formData.password
-      }
+    if(file === null) {
+      setPetProfileError('No image selected')
+    }
 
-      const response = await fetch('http://127.0.0.1:8000/api/v1/pet/register', {
+    try {
+
+      const formDataWithFile = new FormData();
+      formDataWithFile.append("guid", String(guid));
+      for (const key in formData) {
+        formDataWithFile.append(key, formData[key]);
+      }
+      formDataWithFile.append("file", file);
+
+
+      const response = await fetch('http://localhost:8000/api/v1/pet/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
+        body: formDataWithFile
       });
 
       if (!response.ok) {
@@ -102,8 +159,7 @@ export default function Example() {
       // Do something with the successful response, if needed
       const data = await response.json();
       if (data.status_code === 200) {
-        alert("Pet successfully registered");
-        router.push("/")
+        openAlertModal();
       }
       else{
         alert(data.detail);
@@ -119,15 +175,15 @@ export default function Example() {
 
   };
 
-
-
-
-
   return (
     <>
-      <div className='grid place-items-center'>
-      <div className="container w-4/5 sm:w-3/5 mt-32 mb-32">
-      <form onSubmit={handleSubmit}>
+      <div className='bg-fixed grid place-items-center px-2' style={{
+        backgroundImage: `url(${bg.src})`,
+        width: '100%',
+        height: '100%',
+      }}>
+      <div className="container w-full sm:w-3/5 my-2 sm:my-24 bg-white opacity-95 px-6 py-8 sm:px-12 sm:py-16 rounded-lg " >
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div>
 
         <div className="border-b border-gray-900/10 pb-12">
@@ -148,7 +204,7 @@ export default function Example() {
                   name="firstname"
                   id="firstname"
                   autoComplete="firstname"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -166,7 +222,7 @@ export default function Example() {
                   name="lastname"
                   id="lastname"
                   autoComplete="lastname"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -184,7 +240,7 @@ export default function Example() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -203,15 +259,25 @@ export default function Example() {
                   name="phoneNo"
                   type="text"
                   autoComplete="phoneNo"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
+            <StateSelect
+            selectedState={formData.state_code}
+            handleChange={handleStateChange}
+          />
 
-            <div className="sm:col-span-5 sm:col-start-1">
+          <CitySelect
+            selectedCity={formData.city_id}
+            selectedState={formData.state_code}
+            handleChange={handleCityChange}
+          />
+
+            <div className="sm:col-span-4 sm:col-start-1">
               <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
-                Address
+                Street Address
               </label>
               <div className="mt-2">
                 <input
@@ -222,12 +288,12 @@ export default function Example() {
                   name="address"
                   id="address"
                   autoComplete="address"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
-            <div className="sm:col-span-1">
+            <div className="sm:col-span-2">
               <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
                 ZIP / Postal code
               </label>
@@ -240,7 +306,7 @@ export default function Example() {
                   name="postalCode"
                   id="postalCode"
                   autoComplete="postalCode"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -258,7 +324,7 @@ export default function Example() {
                   name="contactPerson"
                   type="text"
                   autoComplete="contactPerson"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -277,7 +343,7 @@ export default function Example() {
                   name="contactPersonNo"
                   type="text"
                   autoComplete="contactPersonNo"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -291,6 +357,48 @@ export default function Example() {
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+          <div className="col-span-full">
+              {/* <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
+                Pet Photo
+              </label> */}
+              <div className="mt-2 flex flex-col items-start gap-4 gap-x-3">
+              
+              {/* Image Preview */}
+              {previewURL ? (
+                <img
+                  className="object-cover h-32 w-32 rounded-full ring-2 ring-offset-2 ring-slate-300"
+                  src={previewURL} 
+                  alt=""
+
+
+            onClick={handleImageClick}
+                />
+              ) : (
+                <UserCircleIcon className="h-32 w-32 rounded-full text-gray-300 ring-2 ring-offset-2 ring-slate-300" aria-hidden="true" />
+              )}
+
+              <p className='font-bold text-red-500 text-sm'>{petProfileError}</p>
+
+              
+
+              <label
+              htmlFor="file"
+                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                >
+                  Select Pet Photo
+                </label>
+                <span className="text-sm leading-6 text-gray-600">The image selected will be the display picture of your pet in the website. </span>
+                <input
+                className='hidden'
+                type="file"
+                id='file'
+                name='file'
+                accept="image/png, image/gif, image/jpeg"
+                onChange={handleFileChange}
+              />
+              </div>
+            </div>
 
           <PetTypeSelect
             selectedPetType={formData.petType}
@@ -309,7 +417,7 @@ export default function Example() {
                   id="petGender"
                   name="petGender"
                   autoComplete="petGender"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:max-w-xs sm:text-sm sm:leading-6"
                 >
                   <option value="">Select Pet's Gender</option>
                   <option value="Male">Male</option>
@@ -333,7 +441,7 @@ export default function Example() {
                   name="petName"
                   type="text"
                   autoComplete="petName"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -351,7 +459,7 @@ export default function Example() {
                   name="petMicrochipNo"
                   type="text"
                   autoComplete="petMicrochipNo"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -370,7 +478,7 @@ export default function Example() {
                   name="petBreed"
                   id="petBreed"
                   autoComplete="petBreed"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -388,7 +496,7 @@ export default function Example() {
                   name="petColor"
                   id="petColor"
                   autoComplete="petColor"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -407,7 +515,7 @@ export default function Example() {
                   name="petBirthMonth"
                   type="number"
                   autoComplete="petBirthMonth"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -427,7 +535,7 @@ export default function Example() {
                   name="petBirthYear"
                   type="number"
                   autoComplete="petBirthYear"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -459,7 +567,7 @@ export default function Example() {
                   name="username"
                   type="text"
                   autoComplete="username"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -479,7 +587,7 @@ export default function Example() {
                   name="password"
                   id="password"
                   autoComplete="password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -497,7 +605,7 @@ export default function Example() {
                   name="confirmPassword"
                   id="confirmPassword"
                   autoComplete="confirmPassword"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-sm sm:text-sm sm:leading-6"
                 />
 
                 {passwordError && 
@@ -528,6 +636,99 @@ export default function Example() {
       </form>
     </div>
       </div>
+
+
+    {/* Modal overlay */}
+    {isOpenImagePreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          {/* Modal content */}
+          <div className="relative bg-white rounded-lg">
+            {/* Image inside the modal */}
+            <img
+              className="object-contain rounded-lg max-h-screen"
+              src={previewURL}
+              alt=""
+              
+            />
+
+            
+          {/* Close button */}
+          <button
+              className="absolute top-1 right-1 p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+              onClick={closePreviewModal}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3.293 3.293a1 1 0 011.414 0L10 8.586l5.293-5.293a1 1 0 111.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+
+      <Transition appear show={isOpenModalAlert} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeAlertModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-bold leading-6 text-gray-900"
+                  >
+                    Pet Recorded!
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      You and your pet information successfully recorded.
+                    </p>
+                  </div>
+
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={()=>router.push(`/pet/${guid}`)}
+                    >
+                      Okay
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </>
   )
 }

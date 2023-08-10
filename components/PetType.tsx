@@ -28,7 +28,7 @@ const PetTypeSelect = ({ selectedPetType, handleChange }) => {
         </label>
         <div className="mt-2">
         <select
-            required
+            // required
             value={selectedPetType} onChange={handleChange}
             id="petType"
             name="petType"
