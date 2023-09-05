@@ -26,7 +26,7 @@ const BlogsSection = () => {
                             <span className="text-orange-400 font-semibold">Latest Blog</span>
                         </div>
                     </div>
-                    <h1 className="light:text-slate-700 font-semibold text-2xl sm:text-4xl  leading-normal ">The Importance of Pet Identification: Why Every Pet Needs a QR Tag</h1>
+                    <h1 className="light:text-slate-700 font-semibold text-2xl sm:text-4xl  leading-normal  text-slate-700">The Importance of Pet Identification: Why Every Pet Needs a QR Tag</h1>
                     <div className="flex flex-row mt-4 gap-3">
                         <div className="shrink-0 py-1 pr-3 border-r-2 border-slate-300"><h4 className="font-medium light:text-slate-700">12 hours ago</h4></div>
                         <div className="shrink-0 py-1 flex flex-row justify-center items-center ">
@@ -51,7 +51,7 @@ const BlogsSection = () => {
               </div>
             </div>
             <div className="w-full sm:w-1/2">
-              <h1 className="text-lg font-semibold mt-6 md:mt-6 sm:text-2xl text-center sm:text-left">Recent Blogs</h1>
+              <h1 className="text-lg font-semibold mt-6 md:mt-6 sm:text-2xl text-center sm:text-left text-slate-700">Recent Blogs</h1>
               <div className="flex flex-row sm:flex-col flex-wrap gap-2 sm:gap-2 mt-4">
                 <div className="flex flex-col sm:flex-row gap-2">
                     <div className="flex flex-col items-start bg-slate-100 p-3 rounded-md shadow">

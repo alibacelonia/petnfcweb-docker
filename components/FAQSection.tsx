@@ -13,9 +13,9 @@ const FAQSection = () => {
     
       <div className="flex flex-col animate-fadeIn animation-delay-2 pt-14 sm:pt-10 md:flex-row">
         <div className="w-full md:w-5/12">
-          <h1 className="text-2xl font-semibold mt-6 md:mt-0 md:text-4xl text-center sm:text-left">Any questions?</h1>
-          <h1 className="text-2xl font-semibold mt-2 sm:mt-6 md:mt-0 md:text-4xl text-center sm:text-left">Check out the FAQs</h1>
-          <p className="text-lg mt-6 mb-16 mb-6 md:text-lg text-center sm:text-left">
+          <h1 className="text-2xl font-semibold mt-6 md:mt-0 md:text-4xl text-center sm:text-left text-slate-700">Any questions?</h1>
+          <h1 className="text-2xl font-semibold mt-2 sm:mt-6 md:mt-0 md:text-4xl text-center sm:text-left text-slate-700">Check out the FAQs</h1>
+          <p className="text-lg mt-6 mb-6 md:text-lg text-center sm:text-left text-slate-700">
           Still have unanswered questions and need to get in touch?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">

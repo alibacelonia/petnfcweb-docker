@@ -10,7 +10,8 @@ import WhyBuyOurProductSection from "../components/WhyBuyProductSection";
 
 export default function Home() {
   return (
-        <ThemeProvider enableSystem={true} attribute="class">
+    <>
+         {/* <ThemeProvider enableSystem={true} attribute="class"> */}
           <Navbar />  
           <main className="mx-auto sm:px-6 md:max-w-7xl max-w-7xl px-4">
             <HeroSection />
@@ -22,6 +23,7 @@ export default function Home() {
             <BlogsSection />
           </main>
         <Footer/>
-        </ThemeProvider>
+         {/* </ThemeProvider> */}
+        </>
   )
 }

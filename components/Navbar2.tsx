@@ -63,7 +63,7 @@ export default function Navbar() {
                 width={54} // Desired size with correct aspect ratio
                 alt="Your Name"
               />
-                <h1 className="text-2xl font-bold hidden sm:block text-slate-800">PetzNFC</h1>
+                <h1 className="text-2xl font-bold hidden sm:block text-slate-700">PetzNFC</h1>
               </div>
             </a>
             <div className="md:hidden">
@@ -91,7 +91,7 @@ export default function Navbar() {
                   }>{item.label}</a>
                 )
               })}
-              {currentTheme === "dark" ? (
+              {/* {currentTheme === "dark" ? (
                 <button
                   onClick={() => setTheme("light")}
                   className="bg-slate-100 p-2 rounded-xl"
@@ -105,7 +105,7 @@ export default function Navbar() {
                 >
                   <RiMoonFill size={25} />
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         </div>

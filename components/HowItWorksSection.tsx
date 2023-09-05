@@ -40,7 +40,7 @@ const HowItWorksSection = () => {
   return (
     <section id="howitworks" className="overflow-hidden pt-5">
       <div className="">
-        <h1 className="font-semibold text-4xl text-center py-10">How Does It Work?</h1>
+        <h1 className="font-semibold text-4xl text-center py-10 text-slate-700">How Does It Work?</h1>
       </div>
       <div className="relative flex flex-col text-center items-center justify-center animate-fadeIn animation-delay-2 md:flex-row md:text-left">
              
@@ -77,8 +77,8 @@ const HowItWorksSection = () => {
       </div>
       <div className="flex justify-center items-center py-5">
         <div className="text-center max-w-xl">
-        <h1 className="text-2xl font-semibold"> Step {realIndex + 1}. {steps[realIndex].title}</h1>
-        <p className="text-sm mt-2">{steps[realIndex].description}</p>
+        <h1 className="text-2xl font-semibold text-slate-700"> Step {realIndex + 1}. {steps[realIndex].title}</h1>
+        <p className="text-sm mt-2 text-slate-700">{steps[realIndex].description}</p>
           </div>
       </div>
     </section>
