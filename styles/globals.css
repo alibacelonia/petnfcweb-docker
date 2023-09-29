@@ -54,3 +54,11 @@ body{
 .swiper-slide.swiper-slide{
   background: transparent;
 }
+
+.swiper-slide-prev{
+  opacity: .2 !important;
+}
+
+.swiper-slide-next{
+  opacity: .2 !important;
+}

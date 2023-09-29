@@ -1,15 +1,37 @@
 "use client" // this is a client component
-import React from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { HiArrowDown, HiChevronDown, HiOutlineArrowSmRight, HiOutlinePhoneOutgoing, HiOutlineChat } from "react-icons/hi"
 import { Link } from "react-scroll/modules"
 import Accordion from "./Accordion"
-const { Fragment, useState } = React
 
+
+export function useIsVisible(ref) {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+        setIntersecting(entry.isIntersecting)
+    } 
+    );
+    
+    observer.observe(ref.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref]);
+
+  return isIntersecting;
+}
 
 const FAQSection = () => {
 
+  const ref1 = useRef();
+  const isVisible1 = useIsVisible(ref1);
+  
+  
+
   return (
-    <section id="faqs" className="overflow-hidden pt-5">
+    <section id="faqs" ref={ref1} className={`transition-opacity ease-in duration-1000 ${isVisible1 ? "opacity-100" : "opacity-0"} overflow-hidden pt-5`}>
     
       <div className="flex flex-col animate-fadeIn animation-delay-2 pt-14 sm:pt-10 md:flex-row">
         <div className="w-full md:w-5/12">

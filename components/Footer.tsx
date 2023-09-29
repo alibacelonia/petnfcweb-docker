@@ -14,17 +14,17 @@ const Footer = () => {
       <hr className="w-full h-0.5 mx-auto mt-8 bg-neutral-200 border-0"></hr>
       <div className="mx-auto  p-4 flex flex-col text-center text-neutral-900 md:flex-row md:justify-between">
         <div className="flex flex-row items-center justify-center space-x-1 text-neutral-500 dark:text-neutral-100">
-          © 2023 PetzNFC<a href="/" className="hover:underline"></a>
+          © 2023 PetNFC<a href="/" className="hover:underline"></a>
         </div>
         <div className="flex flex-row items-center justify-center space-x-2 mb-1">
-          <a href="https://facebook.com/petznfc" rel="noreferrer" target="_blank">
+          <a href="https://facebook.com/petnfc" rel="noreferrer" target="_blank">
             <AiOutlineFacebook
               className="transition-transform cursor-pointer text-neutral-500 dark:text-neutral-100"
               size={30}
             />
           </a>
           <a
-            href="https://instagram.com/petznfc"
+            href="https://instagram.com/petnfc"
             rel="noreferrer"
             target="_blank"
           >
@@ -35,7 +35,7 @@ const Footer = () => {
           </a>
 
           <a
-            href="https://twitter.com/petznfc"
+            href="https://twitter.com/petnfc"
             rel="noreferrer"
             target="_blank"
           >
@@ -45,7 +45,7 @@ const Footer = () => {
             />
           </a>
           <a
-            href="https://youtube.com/petznfc"
+            href="https://youtube.com/petnfc"
             rel="noreferrer"
             target="_blank"
           >

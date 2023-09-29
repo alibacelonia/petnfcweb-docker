@@ -1,5 +1,5 @@
 "use client" // this is a client component
-import React from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { 
             HiOutlineIdentification, 
             HiOutlineQrcode,
@@ -12,9 +12,31 @@ import {
             HiOutlineArrowSmRight
         } from "react-icons/hi"
 
+export function useIsVisible(ref) {
+    const [isIntersecting, setIntersecting] = useState(false);
+    
+    useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => {
+            setIntersecting(entry.isIntersecting)
+        } 
+        );
+        
+        observer.observe(ref.current);
+        return () => {
+        observer.disconnect();
+        };
+    }, [ref]);
+    
+    return isIntersecting;
+}
+          
 const BlogsSection = () => {
+
+    const ref1 = useRef();
+    const isVisible1 = useIsVisible(ref1);
+    
     return (
-        <section id="blogs" className="overflow-hidden pt-5 bg-amber-1000">
+        <section id="blogs" ref={ref1} className={`transition-opacity ease-in duration-1000 ${isVisible1 ? "opacity-100" : "opacity-0"} overflow-hidden pt-5 bg-amber-1000`}>
         
           <div className="flex flex-col animate-fadeIn animation-delay-2  md:flex-row md:text-left">
             <div className="w-full sm:w-1/2 sm:pr-10">
