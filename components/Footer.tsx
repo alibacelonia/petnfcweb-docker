@@ -17,14 +17,14 @@ const Footer = () => {
           © 2023 PetNFC<a href="/" className="hover:underline"></a>
         </div>
         <div className="flex flex-row items-center justify-center space-x-2 mb-1">
-          <a href="https://facebook.com/petnfc" rel="noreferrer" target="_blank">
+          <a href="https://www.facebook.com/petnfc.au" rel="noreferrer" target="_blank">
             <AiOutlineFacebook
               className="transition-transform cursor-pointer text-neutral-500 dark:text-neutral-100"
               size={30}
             />
           </a>
           <a
-            href="https://instagram.com/petnfc"
+            href="https://www.instagram.com/petnfc.info/"
             rel="noreferrer"
             target="_blank"
           >

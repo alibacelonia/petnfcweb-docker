@@ -4,8 +4,11 @@ import { useState } from "react"
 import { Link } from "react-scroll/modules"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { RiMoonFill, RiSunLine } from "react-icons/ri"
 import { IoMdMenu, IoMdClose } from "react-icons/io"
+import { 
+  HiOutlineShoppingCart,
+  HiUser
+} from "react-icons/hi"
 import Image from 'next/image';
 
 interface NavItem {
@@ -18,6 +21,10 @@ const NAV_ITEMS: Array<NavItem> = [
     //   label: "Mission",
     //   page: "mission",
     // },
+    {
+      label: "Order Online",
+      page: "order",
+    },
     {
       label: "Features",
       page: "features",
@@ -42,6 +49,10 @@ const NAV_ITEMS: Array<NavItem> = [
       label: "Blogs",
       page: "blogs",
     },
+    {
+      label: "My Account",
+      page: "account",
+    },
 ]
 
 export default function Navbar() {
@@ -59,11 +70,11 @@ export default function Navbar() {
               <Image
               className="hidden sm:block"
                 src="/assets/2.png" // Route of the image file
-                height={54} // Desired size with correct aspect ratio
-                width={54} // Desired size with correct aspect ratio
-                alt="Your Name"
+                height={45} // Desired size with correct aspect ratio
+                width={45} // Desired size with correct aspect ratio
+                alt="logo"
               />
-                <h1 className="text-2xl font-bold hidden sm:block text-slate-700">PetzNFC</h1>
+                <h1 className="text-2xl font-bold hidden sm:block text-slate-700">PetNFC</h1>
               </div>
             </a>
             <div className="md:hidden">
@@ -85,10 +96,24 @@ export default function Navbar() {
           >
             <div className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
               {NAV_ITEMS.map((item, idx) => {
+                let classnames = "block lg:inline-block text-sm md:text-sm cursor-pointer";
+                let linkText = undefined;
+                switch (item.page) {
+                  case "order":
+                    linkText = <div className="flex gap-1 "><HiOutlineShoppingCart size={20} /> {item.label}</div>;
+                    classnames += " bg-blue-500 hover:bg-blue-700 text-white p-3 rounded-md"; 
+                    break;
+                  case "account":
+                    linkText = <div className="flex gap-1 lg:border-l-2 lg:pl-4"><HiUser size={18} /> {item.label}</div>;
+                    classnames += " "; 
+                    break;
+
+                  default:
+                    linkText = item.label;
+                    classnames += " text-neutral-900  hover:text-neutral-500 dark:text-neutral-100"; 
+                }
                 return (
-                  <a href={"/#"+item.page} className={
-                    "block lg:inline-block text-neutral-900  hover:text-neutral-500 dark:text-neutral-100 text-sm md:text-base"
-                  }>{item.label}</a>
+                  <a href={"/#"+item.page} className={classnames}>{linkText}</a>
                 )
               })}
               {/* {currentTheme === "dark" ? (

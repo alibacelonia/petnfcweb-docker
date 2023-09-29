@@ -1,6 +1,6 @@
 "use client" // this is a client component
 import React, { useEffect, useRef, useState } from "react"
-import { HiArrowDown, HiChevronDown, HiOutlineArrowSmRight, HiOutlinePhoneOutgoing, HiOutlineChat } from "react-icons/hi"
+import { HiArrowDown, HiChevronDown, HiOutlineArrowSmRight, HiOutlinePhoneOutgoing, HiOutlineChat, HiOutlineMail} from "react-icons/hi"
 import { Link } from "react-scroll/modules"
 import Accordion from "./Accordion"
 
@@ -42,18 +42,18 @@ const FAQSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <div className="flex items-start gap-2">
-                  <div className="grow sm:shrink-0 bg-slate-100 rounded-lg p-3">
+                  {/* <div className="grow sm:shrink-0 bg-slate-100 rounded-lg p-3">
                     <HiOutlinePhoneOutgoing size={30} className="text-indigo-500 "></HiOutlinePhoneOutgoing>
                     <p className="my-4 text-sm  text-slate-700">Still have questions?</p>
                     <div className="flex gap-1">
                       <span className="text-sm text-indigo-500 font-semibold">Call us </span><HiOutlineArrowSmRight size={20} className="text-indigo-500 "></HiOutlineArrowSmRight>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="grow sm:shrink-0 bg-slate-100 rounded-lg p-3">
-                    <HiOutlineChat size={30} className="text-green-500 "></HiOutlineChat>
+                    <HiOutlineMail size={30} className="text-green-500 "></HiOutlineMail>
                     <p className="my-4 text-sm  text-slate-700">Still have questions?</p>
                     <div className="flex gap-1">
-                      <span className="text-sm text-green-500 font-semibold">Chat with us </span><HiOutlineArrowSmRight size={20} className="text-green-500 "></HiOutlineArrowSmRight>
+                      <span className="text-sm text-green-500 font-semibold">Email Us </span><HiOutlineArrowSmRight size={20} className="text-green-500 "></HiOutlineArrowSmRight>
                     </div>
                   </div>
               </div>
