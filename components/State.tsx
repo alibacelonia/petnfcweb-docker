@@ -9,7 +9,7 @@ const StateSelect = ({ selectedState, handleChange }) => {
     // Fetch the list of countries from the API
     const fetchPetType = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/v1/country/AU/state'); // Replace with the actual API endpoint
+        const response = await fetch('https://petnfc.com.au/api/v1/country/AU/state'); // Replace with the actual API endpoint
         if (!response.ok) {
           throw new Error('Failed to fetch countries');
         }

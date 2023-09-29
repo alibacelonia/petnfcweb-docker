@@ -5,9 +5,8 @@ import { Link } from "react-scroll/modules"
 
 import { Dialog, Transition } from '@headlessui/react'
 
+
 export function useIsVisible(ref) {
-
-
   const [isIntersecting, setIntersecting] = useState(false);
 
   useEffect(() => {

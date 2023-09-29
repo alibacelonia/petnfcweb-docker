@@ -38,7 +38,7 @@ const petFound = (response) => {
         <div className='mt-12 mb-4'>
           <img
                       className="object-cover h-44 w-44 sm:h-60 sm:w-60 rounded-full ring-2 ring-offset-2 mb-8 ring-slate-300"
-                      src={`http://localhost:8000/userdata/${response["data"]["pet"]["owner_id"]}/${response["data"]["pet"]["unique_id"]}/profile/IMG_2154.jpg`} 
+                      src={`https://petnfc.com.au/userdata/${response["data"]["pet"]["owner_id"]}/${response["data"]["pet"]["unique_id"]}/profile/${response["data"]["pet"]["main_picture"]}`} 
                       alt={response["data"]["pet"]["unique_id"]}
 
 
@@ -253,7 +253,7 @@ const responsePage = () => {
     // Fetch data based on the 'guid' parameter on the client side
     async function fetchPetData() {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/v1/pet/${guid}/details`); // Replace with your API endpoint
+        const res = await fetch(`https://petnfc.com.au/api/v1/pet/${guid}/details`); // Replace with your API endpoint
         const data = await res.json();
         setPetData(data);
       } catch (error) {
@@ -311,7 +311,7 @@ export default responsePage;
 //     // };
 
 //     // const fetchresponse = async (guid: string) => {
-//     //   const res = await fetch(`http://127.0.0.1:8000/pet/${guid}/details`);
+//     //   const res = await fetch(`https://petnfc.com.au/pet/${guid}/details`);
 
 //     //     if (!res.ok) {
 //     //         throw new Error('Failed to fetch data from server');

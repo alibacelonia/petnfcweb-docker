@@ -145,7 +145,7 @@ export default function Example() {
       formDataWithFile.append("file", file);
 
 
-      const response = await fetch('http://localhost:8000/api/v1/pet/register', {
+      const response = await fetch('https://petnfc.com.au/api/v1/pet/register', {
         method: 'POST',
         body: formDataWithFile
       });
