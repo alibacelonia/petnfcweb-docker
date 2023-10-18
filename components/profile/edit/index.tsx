@@ -6,9 +6,10 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 
 import { BiEditAlt } from "react-icons/bi";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import axios from "axios";
-import StateSelect from "../../../../components/State";
-import CitySelect from "../../../../components/City";
+import axios from "axios";import StateSelect from "../../State";
+import CitySelect from "../../City";
+
+import cookieCutter from '@boiseitguru/cookie-cutter'
 
 export default function EditUserDetails({ onPageChange, data }) {
   // get the current year
@@ -62,8 +63,8 @@ export default function EditUserDetails({ onPageChange, data }) {
 
   const handleSubmit = async (e) => {
     // get token from local storage
-    const auth_token = localStorage.getItem("auth_token");
-    const auth_token_type = localStorage.getItem("auth_token_type");
+    const auth_token = cookieCutter.get('auth_token');
+    const auth_token_type = cookieCutter.get('auth_token_type');
     const token = auth_token_type + " " + auth_token;
 
     setSubmitButtonState(false);

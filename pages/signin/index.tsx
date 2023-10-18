@@ -4,7 +4,6 @@ import { HiEye, HiEyeOff } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import MyPets from "../home/pets";
 import MyHomePage from "../home";
 import { useRouter } from "next/navigation";
 import cookieCutter from '@boiseitguru/cookie-cutter'
@@ -17,7 +16,6 @@ export default function SignIn() {
   useEffect(() => {
 
     const auth = cookieCutter.get('auth_token')
-    // const auth = localStorage.getItem("auth_token");
     setToken(auth);
   }, [token]);
 
@@ -49,8 +47,7 @@ export default function SignIn() {
         // Save token to local storage
         cookieCutter.set('auth_token', response.data.data.access_token)
         cookieCutter.set('auth_token_type', response.data.data.token_type)
-        // localStorage.setItem("auth_token", response.data.data.access_token);
-        // localStorage.setItem("auth_token_type", response.data.data.token_type);
+        
         // add successfully notif
         // reload page after success login
         window.location.href = "/home";

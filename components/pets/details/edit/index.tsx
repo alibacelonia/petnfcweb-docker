@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import PetTypeSelect from "../../../../../components/PetType";
 import { Dialog, Listbox, Transition } from "@headlessui/react";
 
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
@@ -8,6 +7,7 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { BiEditAlt } from "react-icons/bi";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
+import PetTypeSelect from "../../../PetType";
 
 const years = Array.from({ length: 50 }, (_, index) => 2023 - index);
 
