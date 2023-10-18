@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "lib/localdata.js"],
   "exclude": [
     "node_modules"
   ]

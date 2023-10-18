@@ -11,19 +11,19 @@ import WhyBuyOurProductSection from "../components/WhyBuyProductSection";
 export default function Home() {
   return (
     <>
-         {/* <ThemeProvider enableSystem={true} attribute="class"> */}
-          <Navbar />  
-          <main className="mx-auto sm:px-6 md:max-w-7xl max-w-7xl px-4">
-            <HeroSection />
-            {/* <MissionSection /> */}
-            <FeaturesSection />
-            <HowItWorksSection />
-            <WhyBuyOurProductSection />
-            <FAQSection />
-            <BlogsSection />
-          </main>
-        <Footer/>
-         {/* </ThemeProvider> */}
-        </>
-  )
+      {/* <ThemeProvider enableSystem={true} attribute="class"> */}
+      <Navbar />
+      <main className="mx-auto sm:px-6 md:max-w-7xl max-w-7xl px-4">
+        <HeroSection />
+        {/* <MissionSection /> */}
+        <FeaturesSection />
+        <HowItWorksSection />
+        <WhyBuyOurProductSection />
+        <FAQSection />
+        <BlogsSection />
+      </main>
+      <Footer />
+      {/* </ThemeProvider> */}
+    </>
+  );
 }

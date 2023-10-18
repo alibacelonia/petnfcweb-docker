@@ -8,10 +8,14 @@
       './app/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
-      extend: {}
+      extend: {
+        fontFamily: {
+          sans: ['var(--font-poppins)'],
+        },
+      }
     },
     plugins: [
-      require('@tailwindcss/forms')
+      require('@tailwindcss/forms'),
     ],
   }
   // });
